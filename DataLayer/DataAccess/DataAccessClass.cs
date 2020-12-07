@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 using System.Configuration;
 using System.Net;
 using Entities.Employee;
+using System.Resources;
+using System.Reflection;
 
 namespace DataAccess
 {
     public class DataAccessClass
     {
-        string EmployeeAPIurl = ConfigurationManager.AppSettings["EmployeeAPIurl"];
+        private static string EmployeeAPIurl= "http://masglobaltestapi.azurewebsites.net/api/Employees";
 
         HttpClient testAPIclient = new HttpClient();
         public List<EmployeeDTO> ConsumeEmployeesTestAPI()

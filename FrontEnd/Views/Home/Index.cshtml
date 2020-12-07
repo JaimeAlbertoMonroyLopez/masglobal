@@ -1,0 +1,121 @@
+﻿@model MVCApp.Models.Employee
+@{
+    ViewBag.Title = "Anual Salary";
+    var employees = ViewBag.employeeList;
+    var EmployeeIDNotFound = ViewBag.EmployeeIDNotFound;
+}
+@*<script src="~/Views/Home/ClientValidations/javascriptValidation.js"></script>*@
+<script type="text/javascript">
+    function ValidateFielEmployeeID(inputText) {
+        var result = false;epp
+        var pattern = /^\d+$/;
+        var validator = pattern.exec(inputText);
+        if (validator || inputText == '') {
+            result = true;
+        }
+        else {
+            result = false;
+        }
+        return result;
+    }
+
+    function AllowOnlyIntegersValidation(inputText) {
+        if (ValidateFielEmployeeID(inputText)) {
+            document.getElementById("EmployeeIDValidator").innerHTML = ' ';
+            document.getElementById("GetEmployeeSubmit").className = "btn btn-block btn-primary";
+        }
+        else {
+            document.getElementById("EmployeeIDValidator").innerHTML = 'Only numbers > 0';
+            document.getElementById("GetEmployeeSubmit").className = "btn btn-block btn-primary disabled";
+            document.getElementById("GetEmployeeSubmit").blur();
+        }
+    }
+    function EmployeeIDNotFoundValidation(msg) {
+        document.getElementById("EmployeeIDValidator").innerHTML = msg;
+    }
+    function ValidateForm(inputText) {
+        if (ValidateFielEmployeeID(inputText))
+            return true;
+        else
+            return false;
+    }
+
+</script>
+@using (Html.BeginForm("GetEmployee", "Home", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return ValidateForm(document.getElementById('id').value);" }))
+{
+
+    @Html.Label("Employee ID:")
+    @Html.TextBoxFor(model => model.id, new { @class = "form-control", @onKeyUp = "AllowOnlyIntegersValidation(document.getElementById('id').value);" })
+    <label name="EmployeeIDValidator" id="EmployeeIDValidator"></label>
+
+
+    if (employees != null)
+    {
+
+        <div class="table-responsive">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th scope="row">ID</th>
+                        <th scope="row">Name</th>
+                        <th scope="row">Contract Type</th>
+                        <th scope="row">Role ID</th>
+                        <th scope="row">Role Name</th>
+                        <th scope="row">Role Description</th>
+                        <th scope="row">Hourly Salary</th>
+                        <th scope="row">Monthly Salary</th>
+                        <th scope="row">Anual Hourly Salary</th>
+                        <th scope="row">Anual Monthly Salary</th>
+                    </tr>
+                    @foreach (dynamic emp in employees)
+                    {
+                        <tr>
+                            <th scope="row">@emp.id</th>
+                            <th scope="row">
+                                @emp.name
+                            </th>
+                            <th scope="row">
+                                @emp.contractTypeName
+                            </th>
+                            <th scope="row">
+                                @emp.roleId
+                            </th>
+                            <th scope="row">
+                                @emp.roleName
+                            </th>
+                            <th scope="row">
+                                @emp.roleDescription
+                            </th>
+                            <th scope="row">
+                                @emp.hourlySalary
+                            </th>
+                            <th scope="row">
+                                @emp.monthlySalary
+                            </th>
+                            <th scope="row">
+                                @emp.AnualHourlySalary
+                            </th>
+                            <th scope="row">
+                                @emp.AnualMonthlySalary
+                            </th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        if (@EmployeeIDNotFound != null)
+        {
+            <script>
+             EmployeeIDNotFoundValidation("@EmployeeIDNotFound");
+            </script>
+        }
+    }
+    <div>
+        <input type="submit" id="GetEmployeeSubmit" value="Get Employees" class="btn btn-block btn-primary" />
+    </div>
+}
+
+
